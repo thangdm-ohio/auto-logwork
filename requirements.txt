@@ -1,0 +1,6 @@
+wheel==0.38.4
+fastapi==0.87.0
+uvicorn[standard]
+requests==2.28.1
+loguru==0.6.0
+kink==0.6.5
