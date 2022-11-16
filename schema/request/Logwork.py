@@ -7,10 +7,10 @@ class LogWork(BaseModel):
   billableSeconds: str = ""
   worker: str
   comment: Union[str, None] = None
-  started: date
+  started: str
   timeSpentSeconds: int
   originTaskId: str
-  remainingEstimate: Any
+  remainingEstimate: Any = None
   endDate: Union[date, None] = None
   includeNonWorkingDays: bool = False
 
@@ -18,4 +18,4 @@ class LogWorkRequest(BaseModel):
   comment: Union[str, None] = None
   started: date
   total_hours: float
-  is_ot: bool
+  is_ot: bool = False
