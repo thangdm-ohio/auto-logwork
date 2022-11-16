@@ -1,3 +1,3 @@
-from .Request import TotalRequest
-from .Logwork import LogWork
+from .Request import SingleRequest
+from .Logwork import LogWork, LogWorkRequest
 from .User import User

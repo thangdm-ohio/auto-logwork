@@ -1,12 +1,15 @@
 from fastapi import Depends, FastAPI
 from fastapi.security import HTTPBasic
 import uvicorn
-from presentation import single
+from presentation import *
 from core.configs.base_response import BaseResponse
-from core.configs.base_settings import get_configs
+from core.configs.base_settings import get_configs, get_setting
 from core.configs.security import get_user
 
-app = FastAPI(**get_configs().api_metadata, dependencies=[Depends(get_user)], default_response_class=BaseResponse)
+app = FastAPI(**get_configs().api_metadata, dependencies=[
+    Depends(get_user),
+    Depends(get_setting)
+    ], default_response_class=BaseResponse)
 
 @app.on_event('startup')
 async def startup():
@@ -15,5 +18,6 @@ async def startup():
 
 
 app.include_router(single)
+app.include_router(multiple)
 
 uvicorn.Config(app, reload=True)

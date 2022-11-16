@@ -11,8 +11,8 @@ from schema.request.Logwork import LogWork
 
 class PerformLogwork:
 
-    def __init__(self, settings: APISettings):
-        self.cfg = settings
+    def __init__(self):
+        self.cfg = get_setting()
         self.loop = asyncio.get_running_loop()
 
 
@@ -22,7 +22,7 @@ class PerformLogwork:
         for item in body.get('logs'):
             logwork_body = LogWork(
                 worker=request.state._state.get('user_key'),
-                started=str(item.get('started')),
+                started=str(item.get('start_date')),
                 timeSpentSeconds=round(item.get('total_hours') * 3600),
                 originTaskId=issue_id,
                 includeNonWorkingDays=item.get('is_ot')
@@ -43,7 +43,7 @@ class PerformLogwork:
                 None,
                 functools.partial(
                     requests.get,
-                    url=f'{get_setting().jira_domain}{get_setting().jira_issue_uri.format(issue_key=issue_key)}',
+                    url=f'{self.cfg.jira_domain}{self.cfg.jira_issue_uri.format(issue_key=issue_key)}',
                     headers=headers)
                 )
             )
@@ -67,15 +67,23 @@ class PerformLogwork:
                 None,
                 functools.partial(
                     requests.post,
-                    url=f'{get_setting().jira_domain}{get_setting().jira_logwork_uri}',
+                    url=f'{self.cfg.jira_domain}{self.cfg.jira_logwork_uri}',
                     headers=headers,
                     data=json.dumps(body)
                 )
             ))
             if response.status_code != 200:
                 raise Bad(response.content)
-            logger.info(response.json())
             return response.json()
+        except Exception as ex:
+            logger.exception(str(ex), ex)
+            raise Internal(str(ex))
+    
+    async def multiple_log_work(self, request: Request, body: typing.List[dict]) -> typing.Tuple[typing.Any, typing.Union[Failure, None]]:
+        try:
+            for item in body:
+                await self.single_task_logging(request, item)
+            return None, None
         except Exception as ex:
             logger.exception(str(ex), ex)
             raise Internal(str(ex))

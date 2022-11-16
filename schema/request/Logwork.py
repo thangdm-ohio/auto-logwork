@@ -16,6 +16,9 @@ class LogWork(BaseModel):
 
 class LogWorkRequest(BaseModel):
   comment: Union[str, None] = None
-  started: date
+  start_date: date
   total_hours: float
   is_ot: bool = False
+
+  class Config:
+    ignore_extra = True
