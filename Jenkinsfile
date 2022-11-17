@@ -17,8 +17,11 @@ pipeline{
   stages {
     stage('Deploy latest') {
       steps {
-        echo "Building"
-        
+        echo "Building image"
+
+        sh "docker build -t ${NAME}:latest"
+        sh "docker tag ${NAME}:latest ${REGISTRY_HOST}${BASE_REF}${NAME}:latest"
+        sh "docker push ${REGISTRY_HOST}${BASE_REF}${NAME}:latest"
       }
     }
   }
