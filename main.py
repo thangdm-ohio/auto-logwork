@@ -19,5 +19,6 @@ async def startup():
 
 app.include_router(single)
 app.include_router(multiple)
+app.include_router(user)
 
 uvicorn.Config(app, reload=True)

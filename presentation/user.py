@@ -4,7 +4,7 @@ from core.configs.base_response import BaseResponseModel
 user = APIRouter(prefix='/user', tags=['user'])
 
 @user.post(
-    '/pre-check', 
+    '/login', 
     response_model=BaseResponseModel,
     description='Precheck the login')
 async def auth_precheck():
