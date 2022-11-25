@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic
 import uvicorn
 from presentation import *
@@ -14,6 +15,13 @@ app = FastAPI(**get_configs().api_metadata, dependencies=[
 @app.on_event('startup')
 async def startup():
     # get_setting()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     return
 
 
